@@ -1,0 +1,68 @@
+CREATE TABLE CUSTOMERS (
+    ID INT PRIMARY KEY AUTO_INCREMENT, 
+    NAME VARCHAR(255), 
+    AGE INT, 
+    ADDRESS VARCHAR(255), 
+    SALARY DECIMAL(10, 2)
+);
+
+The INSERT Trigger:
+
+DELIMITER //
+CREATE TRIGGER after_insert_salary_difference
+AFTER INSERT ON CUSTOMERS
+FOR EACH ROW
+BEGIN
+    SET @my_sal_diff = CONCAT('salary inserted is ', NEW.SALARY);
+END; //
+DELIMITER ;
+
+The UPDATE Trigger:
+
+DELIMITER //
+CREATE TRIGGER after_update_salary_difference
+AFTER UPDATE ON CUSTOMERS
+FOR EACH ROW
+BEGIN
+    DECLARE old_salary DECIMAL(10, 2);
+    DECLARE new_salary DECIMAL(10, 2);
+    SET old_salary = OLD.SALARY;
+    SET new_salary = NEW.SALARY;
+    SET @my_sal_diff = CONCAT('salary difference after update is ', new_salary - old_salary);
+END; //
+DELIMITER ;
+
+
+The DELETE Trigger:
+
+
+DELIMITER //
+CREATE TRIGGER after_delete_salary_difference
+AFTER DELETE ON CUSTOMERS
+FOR EACH ROW
+BEGIN
+    SET @my_sal_diff = CONCAT('salary deleted is ', OLD.SALARY);
+END; //
+DELIMITER ;
+
+
+Test the Insert:
+
+INSERT INTO CUSTOMERS (NAME, AGE, ADDRESS, SALARY) VALUES ('JOHN', 35, 'MYSURU', 50000.00);
+SELECT @my_sal_diff AS SAL_DIFF;
+
+
+Test the Update:
+
+UPDATE CUSTOMERS SET SALARY = 55000.00 WHERE ID = 1;
+SELECT @my_sal_diff AS SAL_DIFF;
+
+Test the Delete:
+
+DELETE FROM CUSTOMERS WHERE ID = 1;
+SELECT @my_sal_diff AS SAL_DIFF;
+
+
+DELIMITER ;
+DROP TRIGGER IF EXISTS after_update_salary_difference;
+DROP TRIGGER IF EXISTS after_delete_salary_difference;

@@ -1,0 +1,47 @@
+CREATE USER 'User'@'localhost' IDENTIFIED BY 'User@123';
+GRANT ALL PRIVILEGES ON *.* TO 'User'@'localhost' WITH GRANT OPTION;
+
+CREATE DATABASE lab_practice;
+USE lab_practice;
+
+CREATE TABLE employee (
+    Emp_no INT, 
+    Ename VARCHAR(50), 
+    Job VARCHAR(50), 
+    Manager_no INT, 
+    Salary DECIMAL(10, 2), 
+    Commission DECIMAL(10, 2)
+);
+
+START TRANSACTION;
+
+INSERT INTO employee (Emp_no, Ename, Job, Manager_no, Salary, Commission) VALUES 
+(1, 'John', 'Manager', 1, 5000.00, 1000.00), 
+(2, 'Smith', 'Developer', 2, 4000.00, 500.00), 
+(3, 'Johnson', 'Analyst', 3, 3500.00, 100.00);
+
+ROLLBACK;
+
+SELECT * FROM employee;
+
+
+ALTER TABLE employee ADD CONSTRAINT pk_employee PRIMARY KEY(Emp_no);
+
+ALTER TABLE employee MODIFY COLUMN Emp_no INT NOT NULL;
+ALTER TABLE employee MODIFY COLUMN Ename VARCHAR(50) NOT NULL;
+ALTER TABLE employee MODIFY COLUMN Job VARCHAR(50) NOT NULL;
+ALTER TABLE employee MODIFY COLUMN Manager_no INT NOT NULL; 
+ALTER TABLE employee MODIFY COLUMN Salary DECIMAL(10, 2) NOT NULL;
+ALTER TABLE employee MODIFY COLUMN Commission DECIMAL(10, 2) NOT NULL;
+
+
+INSERT INTO employee (Emp_no, Ename, Job, Manager_no, Salary, Commission) VALUES 
+(6, 'Johnson', 'Intern', 4, 6000.00, 10.00);
+
+ALTER TABLE employee MODIFY COLUMN Ename VARCHAR(50) NULL;
+ALTER TABLE employee MODIFY COLUMN Salary DECIMAL(10,2) NULL;
+
+INSERT INTO employee (Emp_no, Ename, Job, Manager_no, Salary, Commission) VALUES 
+(10, NULL, 'Intern', 4, NULL, 10.00);
+
+SELECT * FROM employee;
